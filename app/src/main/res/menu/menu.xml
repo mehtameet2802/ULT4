@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/lm"
+        android:icon="@drawable/lm"
+        android:title="Latest"/>
+    <item
+        android:id="@+id/tr"
+        android:icon="@drawable/tr"
+        android:title="Trening"/>
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/search"
+        android:title="Search"/>
+    <item
+        android:id="@+id/uc"
+        android:icon="@drawable/uc"
+        android:title="Upcoming"/>
+</menu>

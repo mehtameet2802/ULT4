@@ -1,0 +1,35 @@
+package com.example.ult3
+
+data class lmData(
+    val page: Int,
+    val results: List<lmResult>,
+    val total_pages: Int,
+    val total_results: Int
+){
+    data class lmResult(
+        val adult: Boolean,
+        val backdrop_path: String,
+        val genre_ids: List<Int>,
+        val id: Int,
+        val original_language: String,
+        val original_title: String,
+        val overview: String,
+        val popularity: Double,
+        val poster_path: String,
+        val release_date: String,
+        val title: String,
+        val video: Boolean,
+        val vote_average: Double,
+        val vote_count: Int)
+    :Comparable<lmResult> {
+        override fun compareTo(other: lmResult): Int {
+            return if(this.vote_average>other.vote_average) {
+                1
+            } else {
+                -1
+            }
+        }
+    }
+
+
+}
