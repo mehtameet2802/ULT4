@@ -81,13 +81,15 @@ class Latest_Movies : Fragment() {
         val sort: FloatingActionButton = view.findViewById(R.id.sort)
 
         sort.setOnClickListener {
-//            data.sortedWith(lmData.lmResult.)
-//            myList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList(
             Collections.sort(data)
-//            data.sortedBy { lmResult -> lmResult.original_title }
-//            rv.adapter = Adapter1(data)
             rv.adapter?.notifyDataSetChanged()
         }
+
+
+//        filter1.setOnClickListener {
+//            rv.adapter = Adapter1(data)
+//            rv.adapter?.notifyDataSetChanged()
+//        }
 
         filter.setOnClickListener {
             var filtered_data = data.filter{lmData -> lmData.vote_average>7}
