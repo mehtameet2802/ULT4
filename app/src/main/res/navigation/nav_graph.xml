@@ -31,7 +31,7 @@
         android:id="@+id/search2"
         android:name="com.example.ult3.search"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_favourites" >
         <action
             android:id="@+id/action_search2_to_upcoming"
             app:destination="@id/upcoming" />

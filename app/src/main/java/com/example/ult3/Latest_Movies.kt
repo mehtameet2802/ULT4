@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +18,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.max
 
 
 class Latest_Movies : Fragment() {
@@ -42,6 +39,7 @@ class Latest_Movies : Fragment() {
         rv.apply {
             layoutManager = LinearLayoutManager(activity)
         }
+
 
         val rf = Retrofit.Builder()
             .baseUrl(url)
@@ -86,9 +84,14 @@ class Latest_Movies : Fragment() {
         }
 
 
-//        filter1.setOnClickListener {
-//            rv.adapter = Adapter1(data)
-//            rv.adapter?.notifyDataSetChanged()
+//        val bundle = arguments
+//        val s = bundle?.getString("filter")
+//        val f = s!!.toInt()
+//        Toast.makeText(view!!.context, f, Toast.LENGTH_SHORT).show()
+//        if (f != 0) {
+//            filter(f)
+//            Toast.makeText(context, "your_text", Toast.LENGTH_SHORT).show()
+//
 //        }
 
         filter.setOnClickListener {
@@ -99,6 +102,28 @@ class Latest_Movies : Fragment() {
 
             return view
         }
+
+//    private fun filter(s:Int){
+//        if(s==1)
+//        {
+//            var filtered_data = data.filter{lmData -> lmData.vote_average>7}
+//            rv.adapter = Adapter1(filtered_data)
+//            rv.adapter?.notifyDataSetChanged()
+//        }
+//        else if(s==2)
+//        {
+//            var filtered_data = data.filter{lmData -> lmData.vote_average>5}
+//            rv.adapter = Adapter1(filtered_data)
+//            rv.adapter?.notifyDataSetChanged()
+//
+//        }
+//        else if(s==3)
+//        {
+//            var filtered_data = data
+//            rv.adapter = Adapter1(filtered_data)
+//            rv.adapter?.notifyDataSetChanged()
+//        }
+//    }
 
     }
 

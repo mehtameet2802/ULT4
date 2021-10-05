@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="Search"
+        android:id = "@+id/search"
+        android:icon="@drawable/search"
+        app:showAsAction="always"
+        >
+    </item>
+    <item
+        android:title="Sort"
+        android:id="@+id/sort" >
+        <menu>
+            <item
+                android:title="Sort A-Z"
+                android:id="@+id/a_sort">
+            </item>
+            <item
+                android:title="Sort By Rating"
+                android:id="@+id/r_sort" />
+        </menu>
+    </item>
+    <item android:title="Filter"
+        android:id="@+id/filter">
+        <menu>
+            <item android:title="All"
+                android:id="@+id/all"/>
+            <item
+                android:title="less than 5"
+                android:id="@+id/r_5"/>
+            <item
+                android:title="Greater than 7"
+                android:id="@+id/r_7" />
+
+        </menu>
+
+    </item>
+
+</menu>

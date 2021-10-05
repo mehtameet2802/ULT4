@@ -7,11 +7,11 @@
     <item
         android:id="@+id/tr"
         android:icon="@drawable/tr"
-        android:title="Trening"/>
+        android:title="Trending"/>
     <item
         android:id="@+id/search"
-        android:icon="@drawable/search"
-        android:title="Search"/>
+        android:icon="@drawable/favourite"
+        android:title="Favourites"/>
     <item
         android:id="@+id/uc"
         android:icon="@drawable/uc"

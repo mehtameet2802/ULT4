@@ -7,6 +7,10 @@
     android:background="#3A3737"
     tools:context=".Latest_Movies">
 
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sort"
@@ -35,10 +39,5 @@
         android:layout_marginBottom="30dp"
         android:clickable="true"
         android:src="@drawable/filter" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </RelativeLayout>
