@@ -1,5 +1,6 @@
 package com.example.ult3
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -13,17 +14,26 @@ class MainActivity : AppCompatActivity() {
     private val lm = Latest_Movies()
     private val tr = Top_Rated()
     private val uc = Upcoming()
+    private val fv = Favourites()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fragments(lm)
+        val i: Intent = intent
+        val email = i.getStringExtra("email")
+        if (email != null) {
+            fragments(lm,email)
+        }
 
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigation.setOnItemReselectedListener {
-            when (it.itemId) {
-                R.id.lm -> fragments(lm)
-                R.id.tr -> fragments(tr)
-                R.id.uc -> fragments(uc)
+
+        if(email != null) {
+            val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+            bottomNavigation.setOnItemReselectedListener {
+                when (it.itemId) {
+                    R.id.lm -> fragments(lm, email)
+                    R.id.tr -> fragments(tr, email)
+                    R.id.uc -> fragments(uc, email)
+                    R.id.fv -> fragments(fv, email)
+                }
             }
         }
     }
@@ -60,13 +70,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun fragments(fragment: Fragment)
+//    fun newInstance(email:String,):Fragment{
+//        val i1 = Latest_Movies()
+//        val bundle = Bundle()
+//        bundle.putString("email",email)
+//        i1.arguments = bundle
+//        return i1
+//    }
+
+    private fun fragments(fragment: Fragment,email: String)
     {
         if(fragment!=null)
         {
+            val i1 = fragment
+            val bundle = Bundle()
+            bundle.putString("email",email)
+            i1.arguments = bundle
             val display=supportFragmentManager.beginTransaction()
             display.replace(R.id.frame_layout,fragment)
             display.commit()
+//            Toast.makeText(this, i1.arguments?.getString("email"),Toast.LENGTH_SHORT).show()
+
         }
     }
 

@@ -1,22 +1,31 @@
 package com.example.ult3
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ult3.fragment.Details1
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
-class Adapter2(private var data:List<trData.trResult>?):RecyclerView.Adapter<Adapter2.ViewHolder>() {
+class Adapter2(private var data:List<trData.trResult>?,private var email:String):RecyclerView.Adapter<Adapter2.ViewHolder>() {
 
     val imageBase="https://image.tmdb.org/t/p/w500/"
     val url = "https://www.youtube.com/watch?v=x_me3xsvDgk"
 
+
+    val mAuth = Firebase.auth
+    val db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
         val inflator=LayoutInflater.from(parent.context)
@@ -28,6 +37,14 @@ class Adapter2(private var data:List<trData.trResult>?):RecyclerView.Adapter<Ada
         val input= data?.get(position)
         if (input != null) {
             holder.bind(input)
+        }
+
+        holder.fav.setOnClickListener{ v ->
+            val activity = v.context as AppCompatActivity
+            val i = favourites(position)
+            if(i==1){
+                Toast.makeText(activity,"Added to favourites", Toast.LENGTH_SHORT).show()
+            }
         }
 
         holder.itemView.setOnClickListener { v ->
@@ -50,13 +67,14 @@ class Adapter2(private var data:List<trData.trResult>?):RecyclerView.Adapter<Ada
 //        val mDescription:TextView
         val mPoster:ImageView
         var mRating:TextView
+        val fav: ImageButton
 
         init{
             mName=v.findViewById(R.id.mName)
 //            mDescription=v.findViewById(R.id.mDescription)
             mPoster=v.findViewById(R.id.mPoster)
             mRating=v.findViewById(R.id.imdb)
-
+            fav = v.findViewById(R.id.favourite2)
         }
 
 
@@ -84,5 +102,20 @@ class Adapter2(private var data:List<trData.trResult>?):RecyclerView.Adapter<Ada
         bundle1.putString("mUrl",url)
         f.arguments = bundle1
         return f
+    }
+
+    fun favourites(index:Int):Int{
+        val des = data?.get(index)?.overview.toString()
+        val name = data?.get(index)?.original_title.toString()
+        val poster = data?.get(index)?.poster_path.toString()
+        val rating = data?.get(index)?.vote_average.toString()
+        val favourite = hashMapOf(
+            "description" to des,
+            "name" to name,
+            "poster" to poster,
+            "rating" to rating
+        )
+        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
+        return 1
     }
 }

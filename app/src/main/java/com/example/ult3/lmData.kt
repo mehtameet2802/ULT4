@@ -20,7 +20,9 @@ data class lmData(
         val title: String,
         val video: Boolean,
         val vote_average: Double,
-        val vote_count: Int)
+        val vote_count: Int,
+//        var fav:Int = 0
+    )
     :Comparable<lmResult> {
         override fun compareTo(other: lmResult): Int {
             return if(this.vote_average>other.vote_average) {

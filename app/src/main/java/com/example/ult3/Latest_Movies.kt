@@ -22,23 +22,23 @@ import java.util.*
 
 class Latest_Movies : Fragment() {
 
+    lateinit var email:String
     lateinit var data: List<lmData.lmResult>
     lateinit var rv: RecyclerView
 
-    //    private val category:String="popular"
-//    private val api_key: String ="?api_key=a631feaba1636b38b4d07a2fb9d1ac4a"
     private val url: String = "https://api.themoviedb.org/3/movie/"
 //   https://api.themoviedb.org/3/movie/popular?api_key=a631feaba1636b38b4d07a2fb9d1ac4a"
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        rv = view.findViewById<RecyclerView>(R.id.rv)
+        rv = view.findViewById(R.id.rv)
         rv.apply {
             layoutManager = LinearLayoutManager(activity)
         }
+
+        val email = arguments?.getString("email").toString()
+//        Toast.makeText(context,email,Toast.LENGTH_SHORT).show()
 
 
         val rf = Retrofit.Builder()
@@ -55,7 +55,7 @@ class Latest_Movies : Fragment() {
             override fun onResponse(call: Call<lmData>, response: Response<lmData>) {
                 data = response.body()?.results!!
                 rv.apply {
-                    adapter = Adapter1(data)
+                    adapter = Adapter1(data,email)
                 }
             }
 
@@ -68,15 +68,13 @@ class Latest_Movies : Fragment() {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
 
-        val view = inflater.inflate(R.layout.fragment_latest_movies, container, false)
-        val filter: FloatingActionButton = view.findViewById(R.id.filter)
-        val sort: FloatingActionButton = view.findViewById(R.id.sort)
+//        Toast.makeText(context,arguments?.getString("email"),Toast.LENGTH_SHORT).show()
+
+        val filter: FloatingActionButton = v.findViewById(R.id.filter)
+        val sort: FloatingActionButton = v.findViewById(R.id.sort)
 
         sort.setOnClickListener {
             Collections.sort(data)
@@ -96,11 +94,11 @@ class Latest_Movies : Fragment() {
 
         filter.setOnClickListener {
             var filtered_data = data.filter{lmData -> lmData.vote_average>7}
-            rv.adapter = Adapter1(filtered_data)
+            rv.adapter = Adapter1(filtered_data,email)
             rv.adapter?.notifyDataSetChanged()
         }
 
-            return view
+            return v
         }
 
 //    private fun filter(s:Int){
@@ -124,6 +122,7 @@ class Latest_Movies : Fragment() {
 //            rv.adapter?.notifyDataSetChanged()
 //        }
 //    }
+
 
     }
 

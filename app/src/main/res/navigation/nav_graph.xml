@@ -20,7 +20,7 @@
         tools:layout="@layout/fragment_top_rated" >
         <action
             android:id="@+id/action_top_Rated_to_search2"
-            app:destination="@id/search2" />
+            app:destination="@id/favourites" />
     </fragment>
     <fragment
         android:id="@+id/upcoming"
@@ -28,10 +28,10 @@
         android:label="fragment_upcoming"
         tools:layout="@layout/fragment_upcoming" />
     <fragment
-        android:id="@+id/search2"
-        android:name="com.example.ult3.search"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_favourites" >
+        android:id="@+id/favourites"
+        android:name="com.example.ult3.Favourites"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites">
         <action
             android:id="@+id/action_search2_to_upcoming"
             app:destination="@id/upcoming" />

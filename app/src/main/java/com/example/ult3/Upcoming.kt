@@ -9,12 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Tag
 
 
 class Upcoming : Fragment() {
+
+    val mAuth = Firebase.auth
 
     private val url:String="https://api.themoviedb.org/3/movie/"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -24,6 +28,9 @@ class Upcoming : Fragment() {
         rv.apply {
             layoutManager=LinearLayoutManager(activity)
         }
+
+        val email = mAuth.currentUser?.email.toString()
+
 
         val rf =Retrofit.Builder()
             .baseUrl(url)
@@ -38,7 +45,7 @@ class Upcoming : Fragment() {
             override fun onResponse(call: Call<ucData>, response: Response<ucData>) {
                 val data= response.body()?.results
                 rv.apply {
-                    adapter=Adapter3(data)
+                    adapter=Adapter3(data,email)
                 }
             }
             override fun onFailure(call: Call<ucData>, t: Throwable) {

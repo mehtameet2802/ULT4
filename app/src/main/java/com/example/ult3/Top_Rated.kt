@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Top_Rated : Fragment() {
 
+    val mAuth = Firebase.auth
+
     private val url:String="https://api.themoviedb.org/3/movie/"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,6 +32,10 @@ class Top_Rated : Fragment() {
         rv.apply {
             layoutManager = LinearLayoutManager(activity)
         }
+
+        val email = mAuth.currentUser?.email.toString()
+//        val email = arguments?.getString("email").toString()
+
 
         val rf = Retrofit.Builder()
             .baseUrl(url)
@@ -41,7 +49,7 @@ class Top_Rated : Fragment() {
             override fun onResponse(call: Call<trData>, response: Response<trData>) {
                 val data= response.body()?.results
                 rv.apply{
-                    adapter=Adapter2(data)
+                    adapter=Adapter2(data,email)
                 }
             }
             override fun onFailure(call: Call<trData>, t: Throwable) {
