@@ -1,6 +1,5 @@
 package com.example.ult3
 
-import android.media.Rating
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ult3.fragment.Details1
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -40,13 +38,29 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
             holder.bind(input)
         }
 
-        holder.fav.setOnClickListener{ v ->
-            val activity = v.context as AppCompatActivity
-            val i = favourites(position)
-            if(i==1){
-                Toast.makeText(activity,"Added to favourites",Toast.LENGTH_SHORT).show()
-            }
-        }
+//        holder.fav.setOnClickListener { v ->
+////            var f = 0
+////            val n = input?.original_title
+//            val activity = v.context as AppCompatActivity
+//            val i = favourites(position)
+//            if (i == 1) {
+//                Toast.makeText(activity, "Added to favourites", Toast.LENGTH_SHORT).show()
+//            }
+
+//            val get_data = n?.let {
+//                db.collection("users").document(email).collection("favourites").document(it)
+//            }
+//            get_data?.get()
+//                ?.addOnSuccessListener { document ->
+//                    if (document != null) {
+//                        f = 1
+//                    } else {
+//                        Log.d(TAG, "No such document")
+//                    }
+//                }
+//                ?.addOnFailureListener { exception ->
+//                    Log.d(TAG, "get failed with ", exception)
+//                }
 
         holder.itemView.setOnClickListener { v ->
             val activity = v.context as AppCompatActivity
@@ -67,13 +81,13 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
 //        var mDescription:TextView
         var mPoster:ImageView
         var mRating:TextView
-        val fav:ImageButton
+//        val fav:ImageButton
         init{
             mName=v.findViewById(R.id.mName)
 //            mDescription=v.findViewById(R.id.mDescription)
             mPoster=v.findViewById(R.id.mPoster)
             mRating=v.findViewById(R.id.imdb)
-            fav = v.findViewById(R.id.favourite)
+//            fav = v.findViewById(R.id.fav)
 
         }
 
@@ -90,6 +104,7 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
         }
     }
 
+
     fun newInstance(index: Int):Fragment? {
         val f = Details1()
         val bundle1 = Bundle()
@@ -99,24 +114,26 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
         bundle1.putString("mPoster",data?.get(index)?.poster_path)
         bundle1.putString("base",imageBase)
         bundle1.putString("mUrl",url)
+        bundle1.putString("email",email)
         f.arguments = bundle1
         return f
     }
 
-    fun favourites(index:Int):Int{
-        val des = data?.get(index)?.overview.toString()
-        val name = data?.get(index)?.original_title.toString()
-        val poster = data?.get(index)?.poster_path.toString()
-        val rating = data?.get(index)?.vote_average.toString()
-        val favourite = hashMapOf(
-            "description" to des,
-            "name" to name,
-            "poster" to poster,
-            "rating" to rating
-        )
-        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
-        return 1
-    }
+//    fun favourites(index:Int):Int{
+//        val des = data?.get(index)?.overview.toString()
+//        val name = data?.get(index)?.original_title.toString()
+//        val poster = data?.get(index)?.poster_path.toString()
+//        val rating = data?.get(index)?.vote_average.toString()
+//        val favourite = hashMapOf(
+//            "description" to des,
+//            "name" to name,
+//            "poster" to poster,
+//            "rating" to rating,
+////            "fav" to 1
+//        )
+//        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
+//        return 1
+//    }
 }
 
 

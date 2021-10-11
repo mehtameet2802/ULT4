@@ -39,13 +39,6 @@ class Adapter3(private val data:List<ucData.ucResult>?,private var email:String)
             holder.bind(input)
         }
 
-        holder.fav.setOnClickListener{ v ->
-            val activity = v.context as AppCompatActivity
-            val i = favourites(position)
-            if(i==1){
-                Toast.makeText(activity,"Added to favourites", Toast.LENGTH_SHORT).show()
-            }
-        }
 
         holder.itemView.setOnClickListener { v ->
             val activity = v.context as AppCompatActivity
@@ -65,14 +58,12 @@ class Adapter3(private val data:List<ucData.ucResult>?,private var email:String)
         var mDescription:TextView
         var mPoster:ImageView
         var mRating:TextView
-        val fav: ImageButton
 
         init{
             mName=v.findViewById(R.id.mName)
             mDescription=v.findViewById(R.id.mDescription)
             mPoster=v.findViewById(R.id.mPoster)
             mRating=v.findViewById(R.id.imdb)
-            fav = v.findViewById(R.id.favourite2)
 
         }
 

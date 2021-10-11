@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity() {
 //            R.id.r_sort -> {
 //            }
             R.id.r_7 -> {
-//                s = 1
-//                send_data(s)
                 return true
             }
             R.id.r_5 -> {
