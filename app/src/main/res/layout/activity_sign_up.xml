@@ -74,7 +74,7 @@
         android:id="@+id/mTrailer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Sign Up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -91,12 +91,15 @@
         app:layout_constraintTop_toBottomOf="@+id/sinView2"
         app:srcCompat="@drawable/logo_vertical" />
 
-    <TextView
+    <Button
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Image"
+        android:background="@android:color/transparent"
+        android:text="Change Image*"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up" />
 

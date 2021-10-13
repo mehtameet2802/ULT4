@@ -26,6 +26,7 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
     val mAuth = Firebase.auth
     val db = Firebase.firestore
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater= LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.lm_layout,parent,false)
@@ -37,6 +38,7 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
         if (input != null) {
             holder.bind(input)
         }
+
 
 //        holder.fav.setOnClickListener { v ->
 ////            var f = 0
@@ -74,6 +76,11 @@ class Adapter1(private var data:List<lmData.lmResult>?,var email:String):Recycle
     override fun getItemCount(): Int {
         return data?.size!!
     }
+
+//    fun filterList(filteredList:ArrayList<lmData.lmResult>) {
+//        data = filteredList
+//        notifyDataSetChanged()
+//    }
 
     class ViewHolder(v: View):RecyclerView.ViewHolder(v)
     {

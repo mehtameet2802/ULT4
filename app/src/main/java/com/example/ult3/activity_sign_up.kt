@@ -47,7 +47,7 @@ class activity_sign_up:AppCompatActivity() {
         val set = findViewById<TextView>(R.id.save)
 
 
-        profile.setOnClickListener {
+        set.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
@@ -81,6 +81,7 @@ class activity_sign_up:AppCompatActivity() {
                 Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show()
             } else {
                 firestore_data(email, username, birthdate, password, intent)
+                uploadpic()
             }
         }
     }
@@ -116,6 +117,22 @@ class activity_sign_up:AppCompatActivity() {
                 imageUri = data?.data!!
                 profile.setImageURI(imageUri)
             }
+        }
+    }
+
+    private fun uploadpic() {
+
+        val image = storageRef.child(Email.toString())
+        image.putFile(imageUri)
+
+// Register observers to listen for when the download is done or if it fails
+        .addOnFailureListener {
+            Toast.makeText(this,"Failed toupload the image",Toast.LENGTH_SHORT).show()
+            // Handle unsuccessful uploads
+        }.addOnSuccessListener { taskSnapshot ->
+           Toast.makeText(this,"Image has been uploaded",Toast.LENGTH_SHORT).show()
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
         }
     }
 }
