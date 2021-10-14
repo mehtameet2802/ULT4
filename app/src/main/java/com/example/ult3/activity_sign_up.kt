@@ -1,21 +1,17 @@
 package com.example.ult3
 
-import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
@@ -41,10 +37,27 @@ class activity_sign_up:AppCompatActivity() {
         Email = findViewById<EditText>(R.id.email2)
         val Password = findViewById<EditText>(R.id.password)
         val Username = findViewById<EditText>(R.id.username2)
-        val Birthdate = findViewById<EditText>(R.id.birthdate)
+        val Birthdate = findViewById<TextView>(R.id.birthdate)
         val sign_up = findViewById<Button>(R.id.mTrailer)
         profile = findViewById<ImageView>(R.id.sign_up)
         val set = findViewById<TextView>(R.id.save)
+
+
+        Birthdate.setOnClickListener{
+
+            // making calender
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+
+            // showing calender and setting bithdate
+
+            val date = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{ view, year, month, day ->
+                Birthdate.text = ""+day+"/"+month+"/"+year
+            },year,month,day)
+            date.show()
+        }
 
 
         set.setOnClickListener {
