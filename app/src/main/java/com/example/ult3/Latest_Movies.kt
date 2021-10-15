@@ -91,36 +91,8 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
 
         setHasOptionsMenu(true)
 
-        val filter: FloatingActionButton = v.findViewById(R.id.filter)
-        val sort: FloatingActionButton = v.findViewById(R.id.sort)
-
-
-//        var search_data = v.findViewById<EditText>(R.id.Search)
-//        val search :ImageButton = v.findViewById(R.id.searchBtn)
-//        search_data.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                val e = mAuth.currentUser?.email
-//                if(s.toString()!="")
-//                {
-//                    val new_data = data.filter { lmData ->
-//                        (lmData.original_title).lowercase() == s.toString().lowercase()
-//                    }
-//                    rv.adapter = e?.let { Adapter1(new_data, it) }
-//                    rv.adapter?.notifyDataSetChanged()
-//                }
-//                if(s.toString()=="")
-//                {
-//                    rv.adapter = e?.let { Adapter1(data, it) }
-//                    rv.adapter?.notifyDataSetChanged()
-//                }
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
+//        val filter: FloatingActionButton = v.findViewById(R.id.filter)
+//        val sort: FloatingActionButton = v.findViewById(R.id.sort)
 
 
 //        sort.setOnClickListener {
