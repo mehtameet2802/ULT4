@@ -31,7 +31,7 @@ import kotlin.collections.ArrayList
 
 class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
 
-    lateinit var email:String
+    //    lateinit var email:String
     lateinit var data: List<lmData.lmResult>
     lateinit var rv: RecyclerView
 
@@ -66,7 +66,7 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
             override fun onResponse(call: Call<lmData>, response: Response<lmData>) {
                 data = response.body()?.results!!
                 rv.apply {
-                    adapter = Adapter1(data,email)
+                    adapter = Adapter1(data, email)
                 }
             }
 
@@ -80,151 +80,137 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
 
 //        Toast.makeText(context,arguments?.getString("email"),Toast.LENGTH_SHORT).show()
+
+        setHasOptionsMenu(true)
 
         val filter: FloatingActionButton = v.findViewById(R.id.filter)
         val sort: FloatingActionButton = v.findViewById(R.id.sort)
 
 
-
-        var search_data = v.findViewById<EditText>(R.id.Search)
-        val search :ImageButton = v.findViewById(R.id.searchBtn)
-        search_data.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val e = mAuth.currentUser?.email
-                if(s.toString()!="")
-                {
-                    val new_data = data.filter { lmData ->
-                        (lmData.original_title).lowercase() == s.toString().lowercase()
-                    }
-                    rv.adapter = e?.let { Adapter1(new_data, it) }
-                    rv.adapter?.notifyDataSetChanged()
-                }
-                if(s.toString()=="")
-                {
-                    rv.adapter = e?.let { Adapter1(data, it) }
-                    rv.adapter?.notifyDataSetChanged()
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
-
-
-        sort.setOnClickListener {
-            Collections.sort(data)
-            rv.adapter?.notifyDataSetChanged()
-        }
-
-
-
-
-
-//        val bundle = arguments
-//        val s = bundle?.getString("filter")
-//        val f = s!!.toInt()
-//        Toast.makeText(view!!.context, f, Toast.LENGTH_SHORT).show()
-//        if (f != 0) {
-//            filter(f)
-//            Toast.makeText(context, "your_text", Toast.LENGTH_SHORT).show()
-//
-//        }
-
-        filter.setOnClickListener {
-            val filtered_data = data.filter{lmData -> lmData.vote_average>7}
-            val e = mAuth.currentUser?.email
-            rv.adapter = e?.let { it1 -> Adapter1(filtered_data, it1) }
-            rv.adapter?.notifyDataSetChanged()
-        }
-
-            return v
-        }
-
-//    private fun filter(s:Int){
-//        if(s==1)
-//        {
-//            var filtered_data = data.filter{lmData -> lmData.vote_average>7}
-//            rv.adapter = Adapter1(filtered_data)
-//            rv.adapter?.notifyDataSetChanged()
-//        }
-//        else if(s==2)
-//        {
-//            var filtered_data = data.filter{lmData -> lmData.vote_average>5}
-//            rv.adapter = Adapter1(filtered_data)
-//            rv.adapter?.notifyDataSetChanged()
-//
-//        }
-//        else if(s==3)
-//        {
-//            var filtered_data = data
-//            rv.adapter = Adapter1(filtered_data)
-//            rv.adapter?.notifyDataSetChanged()
-//        }
-//    }
-
-
-//    fun fun_filter(s:String){
-//        val filtered_list:ArrayList<lmData.lmResult> =ArrayList()
-//        for (item:lmData.lmResult in data)
-//        {
-//            if(item.original_title.lowercase() == s.lowercase())
-//            {
-//                filtered_list.add(item)
-//            }
-//        }
-//
-//       Adapter1.filterList()
-//    }
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-////        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.action_bar, menu)
-//
-//
-//        val search_btn = menu.findItem(R.id.search_icon)
-//        val search = search_btn?.actionView as SearchView
-//        search.queryHint = "Search Here"
-//
-//
-//        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-////                search.clearFocus()
-////                search.setQuery("",false)
-////                search_btn.collapseActionView()
-//                return true
+//        var search_data = v.findViewById<EditText>(R.id.Search)
+//        val search :ImageButton = v.findViewById(R.id.searchBtn)
+//        search_data.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 //            }
 //
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //                val e = mAuth.currentUser?.email
-//                if(newText!="")
+//                if(s.toString()!="")
 //                {
 //                    val new_data = data.filter { lmData ->
-//                        (lmData.original_title).lowercase() == newText?.lowercase()
+//                        (lmData.original_title).lowercase() == s.toString().lowercase()
 //                    }
 //                    rv.adapter = e?.let { Adapter1(new_data, it) }
 //                    rv.adapter?.notifyDataSetChanged()
 //                }
-//                if(newText=="")
+//                if(s.toString()=="")
 //                {
 //                    rv.adapter = e?.let { Adapter1(data, it) }
 //                    rv.adapter?.notifyDataSetChanged()
 //                }
-//
-//                return true
 //            }
 //
-//        } )
-//
-//    }
+//            override fun afterTextChanged(s: Editable?) {
+//            }
+//        })
 
 
+//        sort.setOnClickListener {
+//            Collections.sort(data)
+//            rv.adapter?.notifyDataSetChanged()
+//        }
+
+
+//        filter.setOnClickListener {
+//            val filtered_data = data.filter{lmData -> lmData.vote_average>7}
+//            val e = mAuth.currentUser?.email
+//            rv.adapter = e?.let { it1 -> Adapter1(filtered_data, it1) }
+//            rv.adapter?.notifyDataSetChanged()
+//        }
+            return v
+        }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.action_bar, menu)
+
+
+        val search_btn = menu.findItem(R.id.search_icon)
+        val search = search_btn?.actionView as SearchView
+        search.queryHint = "Search Here"
+
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+//               search.clearFocus()
+//               search.setQuery("",false)
+//               search_btn.collapseActionView()
+                return true
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                val e = mAuth.currentUser?.email.toString()
+                if (newText != "")
+                {
+                    val new_data = data.filter { trData ->
+                        (trData.original_title).lowercase() == newText?.lowercase()
+                    }
+                    rv.adapter = Adapter1(new_data, e)
+                    rv.adapter?.notifyDataSetChanged()
+                }
+                if (newText == "") {
+                    rv.adapter = Adapter1(data, e)
+                    rv.adapter?.notifyDataSetChanged()
+                }
+                return true
+                }
+
+            })
+        }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val e = mAuth.currentUser?.email.toString()
+        return when (item.itemId) {
+            R.id.a_sort -> {
+                val newData = data.sortedBy { it.original_title }
+                rv.adapter = Adapter1(newData, e)
+                rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.r_sort -> {
+                val newData = data.sortedBy { it.vote_average }
+                rv.adapter = Adapter1(newData, e)
+                rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.r_7 -> {
+                val filtered_data = data.filter { lmData -> lmData.vote_average > 7 }
+                rv.adapter = Adapter1(filtered_data, e)
+                rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.r_5 -> {
+                val filtered_data = data.filter { lmData -> lmData.vote_average < 5 }
+                rv.adapter = Adapter1(filtered_data, e)
+                rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.all -> {
+                val filtered_data = data
+                rv.adapter = Adapter1(filtered_data, e)
+                rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
+}
 

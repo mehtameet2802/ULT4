@@ -28,8 +28,8 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
     val db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
-        val inflator=LayoutInflater.from(parent.context)
-        val view=inflator.inflate(R.layout.tr_layout,parent,false)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.tr_layout,parent,false)
         return ViewHolder(view)
     }
 
@@ -53,12 +53,11 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
         return data?.size!!
     }
 
-    class ViewHolder(v: View):RecyclerView.ViewHolder(v) {
-
-
-        val mName:TextView
+    class ViewHolder(v: View):RecyclerView.ViewHolder(v)
+    {
+        var mName:TextView
 //        val mDescription:TextView
-        val mPoster:ImageView
+        var mPoster:ImageView
         var mRating:TextView
 
         init{
@@ -91,22 +90,23 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
         bundle1.putString("mPoster",data?.get(index)?.poster_path)
         bundle1.putString("base",imageBase)
         bundle1.putString("mUrl",url)
+        bundle1.putString("email",email)
         f.arguments = bundle1
         return f
     }
 
-    fun favourites(index:Int):Int{
-        val des = data?.get(index)?.overview.toString()
-        val name = data?.get(index)?.original_title.toString()
-        val poster = data?.get(index)?.poster_path.toString()
-        val rating = data?.get(index)?.vote_average.toString()
-        val favourite = hashMapOf(
-            "description" to des,
-            "name" to name,
-            "poster" to poster,
-            "rating" to rating
-        )
-        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
-        return 1
-    }
+//    fun favourites(index:Int):Int{
+//        val des = data?.get(index)?.overview.toString()
+//        val name = data?.get(index)?.original_title.toString()
+//        val poster = data?.get(index)?.poster_path.toString()
+//        val rating = data?.get(index)?.vote_average.toString()
+//        val favourite = hashMapOf(
+//            "description" to des,
+//            "name" to name,
+//            "poster" to poster,
+//            "rating" to rating
+//        )
+//        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
+//        return 1
+//    }
 }

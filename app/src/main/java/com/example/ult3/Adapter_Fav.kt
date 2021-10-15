@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class Adapter_Fav(private var data:ArrayList<favData>): RecyclerView.Adapter<Adapter_Fav.ViewHolder>() {
+class Adapter_Fav(private var data:List<favData>?): RecyclerView.Adapter<Adapter_Fav.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -17,12 +17,14 @@ class Adapter_Fav(private var data:ArrayList<favData>): RecyclerView.Adapter<Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val input = data.get(position)
-        holder.bind(input)
+        val input = data?.get(position)
+        if (input != null) {
+            holder.bind(input)
+        }
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return data!!.size
     }
 
     class ViewHolder(v: View):RecyclerView.ViewHolder(v){

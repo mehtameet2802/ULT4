@@ -6,6 +6,7 @@ data class lmData(
     val total_pages: Int,
     val total_results: Int
 ){
+    companion object{}
     data class lmResult(
         val adult: Boolean,
         val backdrop_path: String,
@@ -23,15 +24,7 @@ data class lmData(
         val vote_count: Int,
 //        var fav:Int = 0
     )
-    :Comparable<lmResult> {
-        override fun compareTo(other: lmResult): Int {
-            return if(this.vote_average>other.vote_average) {
-                1
-            } else {
-                -1
-            }
-        }
-    }
+
 
 
 }

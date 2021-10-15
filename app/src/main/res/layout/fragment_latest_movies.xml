@@ -7,26 +7,10 @@
     android:background="#3A3737"
     tools:context=".Latest_Movies">
 
-    <EditText
-        android:id="@+id/Search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:ems="10"
-        android:hint="Search here"
-        android:inputType="textPersonName"
-        android:textColorHint="#A49999" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="548dp"
-        android:layout_below="@+id/Search"
+        android:layout_height="match_parent"
         android:layout_marginTop="0dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -56,18 +40,5 @@
         android:layout_marginBottom="30dp"
         android:clickable="true"
         android:src="@drawable/filter" />
-
-    <ImageButton
-        android:id="@+id/searchBtn"
-        android:layout_width="44dp"
-        android:layout_height="39dp"
-        android:layout_alignBottom="@+id/Search"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="2dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/search" />
 
 </RelativeLayout>
