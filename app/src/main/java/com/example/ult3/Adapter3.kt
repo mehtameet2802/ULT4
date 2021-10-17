@@ -20,12 +20,8 @@ import com.google.firebase.ktx.Firebase
 class Adapter3(private var data:List<ucData.ucResult>?,private var email:String): RecyclerView.Adapter<Adapter3.ViewHolder>() {
 
     val imageBase="https://image.tmdb.org/t/p/w500/"
-    val url = "https://www.youtube.com/watch?v=x_me3xsvDgk"
-
 
     val mAuth = Firebase.auth
-    val db = Firebase.firestore
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -88,26 +84,10 @@ class Adapter3(private var data:List<ucData.ucResult>?,private var email:String)
         bundle1.putString("mRating", data?.get(index)?.vote_average.toString())
         bundle1.putString("mPoster",data?.get(index)?.poster_path)
         bundle1.putString("base",imageBase)
-        bundle1.putString("mUrl",url)
         bundle1.putString("email",email)
+        data?.get(index)?.id?.let { bundle1.putInt("id", it) }
         f.arguments = bundle1
         return f
     }
-
-//
-//    fun favourites(index:Int):Int{
-//        val des = data?.get(index)?.overview.toString()
-//        val name = data?.get(index)?.original_title.toString()
-//        val poster = data?.get(index)?.poster_path.toString()
-//        val rating = data?.get(index)?.vote_average.toString()
-//        val favourite = hashMapOf(
-//            "description" to des,
-//            "name" to name,
-//            "poster" to poster,
-//            "rating" to rating
-//        )
-//        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
-//        return 1
-//    }
 
 }

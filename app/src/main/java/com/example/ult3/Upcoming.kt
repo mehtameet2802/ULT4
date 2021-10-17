@@ -1,9 +1,12 @@
 package com.example.ult3
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +34,7 @@ class Upcoming : Fragment() {
 
         data = listOf()
 
-        rv=view.findViewById(R.id.rv3)
+        rv=view.findViewById(R.id.rv)
         rv.apply{
             layoutManager=LinearLayoutManager(activity)
         }
@@ -42,9 +45,9 @@ class Upcoming : Fragment() {
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(RetrofitData3::class.java)
+            .create(RetrofitData::class.java)
 
-        val ApiData=rf.getData()
+        val ApiData=rf.getUpcomingData()
 
         ApiData.enqueue(object: Callback<ucData>
         {
@@ -67,7 +70,7 @@ class Upcoming : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val v =  inflater.inflate(R.layout.fragment_upcoming, container, false)
+        val v =  inflater.inflate(R.layout.fragment_latest_movies, container, false)
         setHasOptionsMenu(true)
         return v
     }
@@ -107,6 +110,7 @@ class Upcoming : Fragment() {
                     rv.adapter = Adapter3(data, e)
                     rv.adapter?.notifyDataSetChanged()
                 }
+
 
                 return true
             }
@@ -148,7 +152,13 @@ class Upcoming : Fragment() {
                 rv.adapter?.notifyDataSetChanged()
                 return true
             }
+            R.id.account ->{
+                val display = activity?.supportFragmentManager!!.beginTransaction()
+                display.replace(R.id.frame_layout, profile()).addToBackStack("profile").commit()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }

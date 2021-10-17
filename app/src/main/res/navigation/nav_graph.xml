@@ -36,4 +36,9 @@
             android:id="@+id/action_search2_to_upcoming"
             app:destination="@id/upcoming" />
     </fragment>
+    <fragment
+        android:id="@+id/profile1"
+        android:name="com.example.ult3.profile"
+        android:label="fragment_profile1"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

@@ -4,8 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     var s:Int = 0
@@ -13,11 +17,14 @@ class MainActivity : AppCompatActivity() {
     private val tr = Top_Rated()
     private val uc = Upcoming()
     private val fv = Favourites()
+    private var mAuth = Firebase.auth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val i: Intent = intent
-        val email = i.getStringExtra("email")
+//        val i: Intent = intent
+//        val email = i.getStringExtra("email")
+        val email  = mAuth.currentUser?.email.toString()
         if (email != null) {
             fragments(lm,email)
         }
@@ -25,17 +32,41 @@ class MainActivity : AppCompatActivity() {
 
         if(email != null) {
             val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-            bottomNavigation.setOnItemReselectedListener {
+            bottomNavigation.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.lm -> fragments(lm, email)
                     R.id.tr -> fragments(tr, email)
                     R.id.uc -> fragments(uc, email)
                     R.id.fv -> fragments(fv, email)
                 }
+                true
             }
         }
-    }
 
+
+//    override fun onBackPressed() {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Exit/Logout")
+//        builder.setMessage("Do you really want to exit \n You will be logged out")
+//        builder.setPositiveButton("Yes"){
+//                dialog,which ->
+//            val intent = Intent(this,LoginActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//        }
+//        builder.setNegativeButton("No"){
+//                dialog, which -> Toast.makeText(this,"Thank you for staying",Toast.LENGTH_SHORT).show()
+////            val intent = Intent(this,SplashScreen::class.java)
+////            startActivity(intent)
+////            finish()
+//        }
+//        builder.setNeutralButton("Cancel"){
+//                dialog, which -> Toast.makeText(this,"Thank you for staying",Toast.LENGTH_SHORT).show()
+//        }
+//
+//        val dialog: AlertDialog = builder.create()
+//        dialog.show()
+    }
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 //        super.onCreateOptionsMenu(menu)
 //        menuInflater.inflate(R.menu.action_bar, menu)
@@ -120,4 +151,10 @@ class MainActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction().add(Latest_Movies(),"filter").commit()
 //    }
 
+//    override fun onBackPressed() {
+////        super.onBackPressed()
+//        val intent = Intent(this,LoginActivity::class.java)
+//        startActivity(intent)
+//        finish()
+//    }
 }

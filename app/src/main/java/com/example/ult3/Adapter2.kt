@@ -21,11 +21,8 @@ import com.google.firebase.ktx.Firebase
 class Adapter2(private var data:List<trData.trResult>?,private var email:String):RecyclerView.Adapter<Adapter2.ViewHolder>() {
 
     val imageBase="https://image.tmdb.org/t/p/w500/"
-    val url = "https://www.youtube.com/watch?v=x_me3xsvDgk"
-
 
     val mAuth = Firebase.auth
-    val db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -56,13 +53,13 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
     class ViewHolder(v: View):RecyclerView.ViewHolder(v)
     {
         var mName:TextView
-//        val mDescription:TextView
+        val mDescription:TextView
         var mPoster:ImageView
         var mRating:TextView
 
         init{
             mName=v.findViewById(R.id.mName)
-//            mDescription=v.findViewById(R.id.mDescription)
+            mDescription=v.findViewById(R.id.mDescription)
             mPoster=v.findViewById(R.id.mPoster)
             mRating=v.findViewById(R.id.imdb)
         }
@@ -72,7 +69,7 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
         fun bind(trData: trData.trResult)
         {
             mName.setText(trData.original_title).toString()
-//            mDescription.setText(trData.overview).toString()
+            mDescription.setText(trData.overview).toString()
             Glide.with(itemView)
                 .load(imageBase+trData.poster_path)
                 .into(mPoster)
@@ -89,24 +86,10 @@ class Adapter2(private var data:List<trData.trResult>?,private var email:String)
         bundle1.putString("mRating", data?.get(index)?.vote_average.toString())
         bundle1.putString("mPoster",data?.get(index)?.poster_path)
         bundle1.putString("base",imageBase)
-        bundle1.putString("mUrl",url)
         bundle1.putString("email",email)
+        data?.get(index)?.id?.let { bundle1.putInt("id", it) }
         f.arguments = bundle1
         return f
     }
 
-//    fun favourites(index:Int):Int{
-//        val des = data?.get(index)?.overview.toString()
-//        val name = data?.get(index)?.original_title.toString()
-//        val poster = data?.get(index)?.poster_path.toString()
-//        val rating = data?.get(index)?.vote_average.toString()
-//        val favourite = hashMapOf(
-//            "description" to des,
-//            "name" to name,
-//            "poster" to poster,
-//            "rating" to rating
-//        )
-//        db.collection("users").document(email).collection("favourites").document(name).set(favourite)
-//        return 1
-//    }
 }

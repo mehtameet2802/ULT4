@@ -1,8 +1,10 @@
 package com.example.ult3
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+
 
 class Favourites : Fragment() {
 
@@ -40,7 +43,7 @@ class Favourites : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_favourites, container, false)
+        val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
         setHasOptionsMenu(true)
         return v
     }
@@ -118,26 +121,65 @@ class Favourites : Fragment() {
                 rv.adapter?.notifyDataSetChanged()
                 return true
             }
+//            R.id.logout ->{
+//                mAuth.signOut()
+//                val intent = Intent(activity,LoginActivity::class.java)
+//                startActivity(intent)
+//                activity?.finish()
+//                return true
+//            }
+            R.id.account ->{
+                val display = activity?.supportFragmentManager!!.beginTransaction()
+                display.replace(R.id.frame_layout, profile()).addToBackStack("profile").commit()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun firestore_data(email:String,data:ArrayList<favData>){
-       db.collection("users").document(email).collection("favourites")
-           .addSnapshotListener(object : EventListener<QuerySnapshot>{
-               override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                   if(error != null){
-                       Log.e("Firestore Error",error.message.toString())
-                       return
-                   }
-                   for(dc :DocumentChange in value?.documentChanges!!)
-                       if(dc.type == DocumentChange.Type.ADDED){
-                           data.add(dc.document.toObject(favData::class.java))
-                       }
-                   rv.adapter = Adapter_Fav(data)
-                   rv.adapter?.notifyDataSetChanged()
-               }
-           })
+
+        if(mAuth.currentUser!!.email == "" || mAuth.currentUser!!.email == null)
+        {
+            val p = mAuth.currentUser!!.phoneNumber
+            if (p != null) {
+                db.collection("users").document(p).collection("favourites")
+                    .addSnapshotListener(object : EventListener<QuerySnapshot>{
+                        override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                            if(error != null){
+                                Log.e("Firestore Error",error.message.toString())
+                                return
+                            }
+                            for(dc :DocumentChange in value?.documentChanges!!)
+                                if(dc.type == DocumentChange.Type.ADDED){
+                                    data.add(dc.document.toObject(favData::class.java))
+                                }
+                            rv.adapter = Adapter_Fav(data)
+                            rv.adapter?.notifyDataSetChanged()
+                        }
+                    })
+            }
+        }
+        else {
+            db.collection("users").document(email).collection("favourites")
+                .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                    override fun onEvent(
+                        value: QuerySnapshot?,
+                        error: FirebaseFirestoreException?
+                    ) {
+                        if (error != null) {
+                            Log.e("Firestore Error", error.message.toString())
+                            return
+                        }
+                        for (dc: DocumentChange in value?.documentChanges!!)
+                            if (dc.type == DocumentChange.Type.ADDED) {
+                                data.add(dc.document.toObject(favData::class.java))
+                            }
+                        rv.adapter = Adapter_Fav(data)
+                        rv.adapter?.notifyDataSetChanged()
+                    }
+                })
+        }
     }
 
 

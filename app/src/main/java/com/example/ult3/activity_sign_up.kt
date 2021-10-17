@@ -18,6 +18,8 @@ import java.util.*
 class activity_sign_up:AppCompatActivity() {
 
 
+    var count = 0
+
     var storage = Firebase.storage
     var storageRef = storage.reference
     val mAuth = Firebase.auth
@@ -25,9 +27,13 @@ class activity_sign_up:AppCompatActivity() {
     lateinit var imageUri: Uri
     lateinit var profile: ImageView
     lateinit var Email: EditText
+    var iurl:String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        count = 0
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
@@ -40,7 +46,8 @@ class activity_sign_up:AppCompatActivity() {
         val Birthdate = findViewById<TextView>(R.id.birthdate)
         val sign_up = findViewById<Button>(R.id.mTrailer)
         profile = findViewById<ImageView>(R.id.sign_up)
-        val set = findViewById<TextView>(R.id.save)
+        val change = findViewById<Button>(R.id.change)
+        val save = findViewById<Button>(R.id.save)
 
 
         Birthdate.setOnClickListener{
@@ -60,7 +67,16 @@ class activity_sign_up:AppCompatActivity() {
         }
 
 
-        set.setOnClickListener {
+        save.setOnClickListener {
+            if (count == 1) {
+
+                uploadpic()
+            } else {
+                Toast.makeText(this, "First change the image", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        change.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
@@ -68,10 +84,12 @@ class activity_sign_up:AppCompatActivity() {
 //                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 //            startActivityForResult(openGalleryIntent, 1000)
             startActivityForResult(intent, 1000)
+//
+            count = 1
         }
 
         sign_up.setOnClickListener {
-            val intent = Intent(application, MainActivity::class.java)
+            val intent = Intent(application, LoginActivity::class.java)
             val email = Email.text.toString()
             val username = Username.text.toString()
             val birthdate = Birthdate.text.toString()
@@ -92,9 +110,8 @@ class activity_sign_up:AppCompatActivity() {
                 Toast.makeText(this, "Please enter birthdate", Toast.LENGTH_SHORT).show()
             } else if (password == "") {
                 Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show()
-            } else {
-                firestore_data(email, username, birthdate, password, intent)
-                uploadpic()
+            } else{
+                firestore_data(email, username, birthdate, password,iurl, intent)
             }
         }
     }
@@ -104,17 +121,19 @@ class activity_sign_up:AppCompatActivity() {
         username: String,
         birthdate: String,
         password: String,
-        i: Intent
+        iurl:String,
+        i: Intent,
     ) {
         val user = hashMapOf(
             "Birthdate" to birthdate,
             "Email" to email,
             "Username" to username,
-            "Password" to password
+            "Password" to password,
+            "iurl" to  iurl
         )
         db.collection("users").document(email).set(user)
             .addOnSuccessListener {
-                Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show()
                 mAuth.createUserWithEmailAndPassword(email, password)
                 i.putExtra("email", email)
                 startActivity(i)
@@ -133,14 +152,19 @@ class activity_sign_up:AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val intent = Intent(this,LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun uploadpic() {
-
-        val image = storageRef.child(Email.toString())
+        iurl = UUID.randomUUID().toString()
+        val image = storageRef.child("images/$iurl")
         image.putFile(imageUri)
-
 // Register observers to listen for when the download is done or if it fails
         .addOnFailureListener {
-            Toast.makeText(this,"Failed toupload the image",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Failed to upload the image",Toast.LENGTH_SHORT).show()
             // Handle unsuccessful uploads
         }.addOnSuccessListener { taskSnapshot ->
            Toast.makeText(this,"Image has been uploaded",Toast.LENGTH_SHORT).show()

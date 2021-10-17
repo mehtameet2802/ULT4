@@ -18,8 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".activity_sign_up"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".activity_sign_up"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".phoneLogin"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 <!--        <activity android:name=".Adapter1$firestore_data"></activity>-->
     </application>
 

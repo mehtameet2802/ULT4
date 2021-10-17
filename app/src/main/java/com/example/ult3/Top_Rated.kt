@@ -1,12 +1,13 @@
 package com.example.ult3
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,7 @@ class Top_Rated : Fragment() {
 
         data = listOf()
 
-        rv = view.findViewById<RecyclerView>(R.id.rv2)
+        rv = view.findViewById<RecyclerView>(R.id.rv)
         rv.apply {
             layoutManager = LinearLayoutManager(activity)
         }
@@ -45,9 +46,9 @@ class Top_Rated : Fragment() {
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(RetrofitData2::class.java)
+            .create(RetrofitData::class.java)
 
-        val ApiData = rf.getData()
+        val ApiData = rf.getTop_RatedData()
 
         ApiData.enqueue(object : Callback<trData> {
             override fun onResponse(call: Call<trData>, response: Response<trData>) {
@@ -70,7 +71,7 @@ class Top_Rated : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val v = inflater.inflate(R.layout.fragment_top_rated, container, false)
+        val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
         setHasOptionsMenu(true)
         return v
     }
@@ -149,6 +150,11 @@ class Top_Rated : Fragment() {
                 val filtered_data = data
                 rv.adapter = Adapter2(filtered_data, e)
                 rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.account ->{
+                val display = activity?.supportFragmentManager!!.beginTransaction()
+                display.replace(R.id.frame_layout, profile()).addToBackStack("profile").commit()
                 return true
             }
             else -> super.onOptionsItemSelected(item)

@@ -2,22 +2,16 @@ package com.example.ult3
 
 
 import android.content.ContentValues.TAG
-import android.media.Image
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.Adapter
-import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.Call
@@ -25,8 +19,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
@@ -56,11 +48,11 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(RetrofitData1::class.java)
+            .create(RetrofitData::class.java)
 
 
 //        val ApiData = rf.getData(category,api_key)
-        val ApiData = rf.getData()
+        val ApiData = rf.getLatestData()
 
         ApiData.enqueue(object : Callback<lmData> {
             override fun onResponse(call: Call<lmData>, response: Response<lmData>) {
@@ -87,28 +79,13 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
 
+
 //        Toast.makeText(context,arguments?.getString("email"),Toast.LENGTH_SHORT).show()
 
         setHasOptionsMenu(true)
 
-//        val filter: FloatingActionButton = v.findViewById(R.id.filter)
-//        val sort: FloatingActionButton = v.findViewById(R.id.sort)
-
-
-//        sort.setOnClickListener {
-//            Collections.sort(data)
-//            rv.adapter?.notifyDataSetChanged()
-//        }
-
-
-//        filter.setOnClickListener {
-//            val filtered_data = data.filter{lmData -> lmData.vote_average>7}
-//            val e = mAuth.currentUser?.email
-//            rv.adapter = e?.let { it1 -> Adapter1(filtered_data, it1) }
-//            rv.adapter?.notifyDataSetChanged()
-//        }
-            return v
-        }
+        return v
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -179,6 +156,11 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
                 val filtered_data = data
                 rv.adapter = Adapter1(filtered_data, e)
                 rv.adapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.account ->{
+                val display = activity?.supportFragmentManager!!.beginTransaction()
+                display.replace(R.id.frame_layout, profile()).addToBackStack("profile").commit()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
