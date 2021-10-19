@@ -1,6 +1,7 @@
 package com.example.ult3
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -32,6 +33,7 @@ class activity_sign_up:AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        supportActionBar?.hide()
         count = 0
 
         super.onCreate(savedInstanceState)
@@ -160,16 +162,31 @@ class activity_sign_up:AppCompatActivity() {
 
     private fun uploadpic() {
         iurl = UUID.randomUUID().toString()
+
+        val progress = ProgressDialog(this)
+        progress.setMessage("Uploading file")
+        progress.setCancelable(false)
+        progress.show()
+
         val image = storageRef.child("images/$iurl")
         image.putFile(imageUri)
 // Register observers to listen for when the download is done or if it fails
         .addOnFailureListener {
-            Toast.makeText(this,"Failed to upload the image",Toast.LENGTH_SHORT).show()
             // Handle unsuccessful uploads
+            if(progress.isShowing)
+            {
+                progress.dismiss()
+                Toast.makeText(this,"Failed to upload the image",Toast.LENGTH_SHORT).show()
+            }
         }.addOnSuccessListener { taskSnapshot ->
-           Toast.makeText(this,"Image has been uploaded",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Image has been uploaded",Toast.LENGTH_SHORT).show()
+                if(progress.isShowing)
+                {
+                    progress.dismiss()
+                }
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
+
+
         }
     }
 }

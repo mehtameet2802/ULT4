@@ -71,7 +71,9 @@ class Favourites : Fragment() {
                 if(newText!="")
                 {
                     val new_data = data.filter { favData ->
-                        (favData.name)?.lowercase() == newText?.lowercase()
+//                        (favData.name)?.lowercase() == newText?.lowercase()
+                        val s = (favData.name)!!.lowercase()
+                        newText!!.lowercase().let { s.startsWith(it) }
                     }
                     rv.adapter = Adapter_Fav(new_data)
                     rv.adapter?.notifyDataSetChanged()

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -20,8 +21,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Upcoming : Fragment() {
 
+    var page:Int = 1
+    val limit:Int = 222
+
 //    lateinit var email:String
-    lateinit var data: List<ucData.ucResult>
+    lateinit var data:  ArrayList<ucData.ucResult>
     lateinit var rv: RecyclerView
 
 
@@ -32,7 +36,9 @@ class Upcoming : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        data = listOf()
+        page = 1
+        var s:Boolean = false
+        data = ArrayList()
 
         rv=view.findViewById(R.id.rv)
         rv.apply{
@@ -47,12 +53,12 @@ class Upcoming : Fragment() {
             .build()
             .create(RetrofitData::class.java)
 
-        val ApiData=rf.getUpcomingData()
+        val ApiData=rf.getUpcomingData(page)
 
         ApiData.enqueue(object: Callback<ucData>
         {
             override fun onResponse(call: Call<ucData>, response: Response<ucData>) {
-                data = response.body()?.results!!
+                data = (response.body()?.results as ArrayList<ucData.ucResult>?)!!
                 rv.apply {
                     adapter = Adapter3(data,email)
                 }
@@ -62,6 +68,46 @@ class Upcoming : Fragment() {
             }
         }
         )
+
+        rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    s = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val currentItems = LinearLayoutManager(activity).childCount
+                val totalItems = LinearLayoutManager(activity).itemCount
+                val scrolledItems = LinearLayoutManager(activity).findFirstCompletelyVisibleItemPosition()
+
+                if (s && page<=limit) {
+                    s = false
+                    page += 1
+                    val apiData = rf.getUpcomingData(page)
+
+                    apiData.enqueue(object : Callback<ucData> {
+                        override fun onResponse(
+                            call: Call<ucData>,
+                            response: Response<ucData>
+                        ) {
+                            val data1 = response.body()?.results!!
+                            data.addAll(data1)
+                            rv.adapter?.notifyDataSetChanged()
+                        }
+
+                        override fun onFailure(call: Call<ucData>, t: Throwable) {
+                                Log.e(TAG, t.message.toString())
+                                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+            }
+        })
     }
 
     override fun onCreateView(
@@ -100,7 +146,9 @@ class Upcoming : Fragment() {
                 if(newText!="")
                 {
                     val new_data = data.filter { ucData ->
-                        (ucData.original_title).lowercase() == newText?.lowercase()
+//                        (ucData.original_title).lowercase() == newText?.lowercase()
+                        val s = (ucData.original_title).lowercase()
+                        newText!!.lowercase().let { s.startsWith(it) }
                     }
                     rv.adapter = Adapter3(new_data, e)
                     rv.adapter?.notifyDataSetChanged()

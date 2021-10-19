@@ -1,13 +1,12 @@
 package com.example.ult3
 
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.AbsListView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +21,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Top_Rated : Fragment() {
 
+    var page:Int = 1
+    val limit:Int = 261
+
 //    lateinit var email:String
-    lateinit var data: List<trData.trResult>
+    lateinit var data: ArrayList<trData.trResult>
     lateinit var rv: RecyclerView
 
     val mAuth = Firebase.auth
@@ -33,7 +35,9 @@ class Top_Rated : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        data = listOf()
+        page = 1
+        var s:Boolean = false
+        data = ArrayList()
 
         rv = view.findViewById<RecyclerView>(R.id.rv)
         rv.apply {
@@ -48,11 +52,11 @@ class Top_Rated : Fragment() {
             .build()
             .create(RetrofitData::class.java)
 
-        val ApiData = rf.getTop_RatedData()
+        val ApiData = rf.getTop_RatedData(page)
 
         ApiData.enqueue(object : Callback<trData> {
             override fun onResponse(call: Call<trData>, response: Response<trData>) {
-                data = response.body()?.results!!
+                data = (response.body()?.results as ArrayList<trData.trResult>?)!!
                 rv.apply{
                     adapter = Adapter2(data,email)
                 }
@@ -60,6 +64,47 @@ class Top_Rated : Fragment() {
             override fun onFailure(call: Call<trData>, t: Throwable) {
                 Log.e(TAG,t.message.toString())
                 Toast.makeText(activity,"Hello", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+        rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    s = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val currentItems = LinearLayoutManager(activity).childCount
+                val totalItems = LinearLayoutManager(activity).itemCount
+                val scrolledItems = LinearLayoutManager(activity).findFirstCompletelyVisibleItemPosition()
+
+                if (s && page<=limit) {
+                    s = false
+                    page += 1
+                    val apiData = rf.getTop_RatedData(page)
+
+                    apiData.enqueue(object : Callback<trData> {
+                        override fun onResponse(
+                            call: Call<trData>,
+                            response: Response<trData>
+                        ) {
+                            val data1 = response.body()?.results!!
+                            data.addAll(data1)
+                            rv.adapter?.notifyDataSetChanged()
+                        }
+
+                        override fun onFailure(call: Call<trData>, t: Throwable) {
+                                Log.e(TAG, t.message.toString())
+                                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
             }
         })
 
@@ -101,7 +146,9 @@ class Top_Rated : Fragment() {
                 if(newText!="")
                 {
                     val new_data = data.filter { trData ->
-                        (trData.original_title).lowercase() == newText?.lowercase()
+//                        (trData.original_title).lowercase() == newText?.lowercase()
+                        val s = (trData.original_title).lowercase()
+                        newText!!.lowercase().let { s.startsWith(it) }
                     }
                     rv.adapter = Adapter2(new_data, e)
                     rv.adapter?.notifyDataSetChanged()

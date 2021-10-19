@@ -35,6 +35,7 @@ class LoginActivity :AppCompatActivity(){
 
         mAuth = Firebase.auth
 
+        supportActionBar?.hide()
 
         val login =findViewById<Button>(R.id.btnlogin)
         var email = findViewById<EditText>(R.id.email)

@@ -3,12 +3,15 @@ package com.example.ult3
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
+import android.provider.ContactsContract.SyncState.set
 import android.util.Log
 import android.view.*
-import android.widget.TextView
+import android.widget.AbsListView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,21 +22,29 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Array.set
 
 
 class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
 
+    var page:Int = 1
+    val limit:Int = 500
+
     //    lateinit var email:String
-    lateinit var data: List<lmData.lmResult>
+    lateinit var data: ArrayList<lmData.lmResult>
     lateinit var rv: RecyclerView
 
     val mAuth = Firebase.auth
+
 
     private val url: String = "https://api.themoviedb.org/3/movie/"
 //   https://api.themoviedb.org/3/movie/popular?api_key=a631feaba1636b38b4d07a2fb9d1ac4a"
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        page = 1
+        var s:Boolean = false
+        data = ArrayList()
         super.onViewCreated(view, savedInstanceState)
         rv = view.findViewById(R.id.rv)
         rv.apply {
@@ -52,11 +63,11 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
 
 
 //        val ApiData = rf.getData(category,api_key)
-        val ApiData = rf.getLatestData()
+        val ApiData = rf.getLatestData(page)
 
         ApiData.enqueue(object : Callback<lmData> {
             override fun onResponse(call: Call<lmData>, response: Response<lmData>) {
-                data = response.body()?.results!!
+                data = (response.body()?.results as ArrayList<lmData.lmResult>?)!!
                 rv.apply {
                     adapter = Adapter1(data, email)
                 }
@@ -69,7 +80,49 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
         })
 
 
+        rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    s = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val currentItems = LinearLayoutManager(activity).childCount
+                val totalItems = LinearLayoutManager(activity).itemCount
+                val scrolledItems = LinearLayoutManager(activity).findFirstCompletelyVisibleItemPosition()
+
+                if (s && page<=limit) {
+                    s = false
+                    page += 1
+                    val apiData = rf.getLatestData(page)
+
+                    apiData.enqueue(object : Callback<lmData> {
+                        override fun onResponse(
+                            call: Call<lmData>,
+                            response: Response<lmData>
+                        ) {
+                            val data1 = response.body()?.results!!
+                            data.addAll(data1)
+                            rv.adapter?.notifyDataSetChanged()
+                        }
+
+                        override fun onFailure(call: Call<lmData>, t: Throwable) {
+                            Log.e(TAG, t.message.toString())
+                            Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+            }
+        })
+
+
     }
+
 
 
     override fun onCreateView(
@@ -78,9 +131,6 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
-
-
-//        Toast.makeText(context,arguments?.getString("email"),Toast.LENGTH_SHORT).show()
 
         setHasOptionsMenu(true)
 
@@ -109,10 +159,11 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
                 val e = mAuth.currentUser?.email.toString()
                 if (newText != "")
                 {
-                    val new_data = data.filter { trData ->
-                        (trData.original_title).lowercase() == newText?.lowercase()
+                    val new_data = data.filter { lmData ->
+                        val s = (lmData.original_title).lowercase()
+                        newText!!.lowercase().let { s.startsWith(it) }
                     }
-                    rv.adapter = Adapter1(new_data, e)
+                    rv.adapter = Adapter1(new_data as ArrayList<lmData.lmResult>, e)
                     rv.adapter?.notifyDataSetChanged()
                 }
                 if (newText == "") {
@@ -167,4 +218,5 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
         }
     }
 }
+
 

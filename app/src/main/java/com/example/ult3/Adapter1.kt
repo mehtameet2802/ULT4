@@ -19,7 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class Adapter1(private var data:List<lmData.lmResult>?,var email:String):RecyclerView.Adapter<Adapter1.ViewHolder>() {
+class Adapter1(private var data: List<lmData.lmResult>, var email:String):RecyclerView.Adapter<Adapter1.ViewHolder>() {
 
     val imageBase="https://image.tmdb.org/t/p/w500/"
     val url = "https://www.youtube.com/watch?v=x_me3xsvDgk"

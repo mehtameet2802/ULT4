@@ -1,5 +1,6 @@
 package com.example.ult3
 
+import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 class profile : Fragment() {
@@ -36,12 +38,14 @@ class profile : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_profile, container, false)
         val email = v.findViewById<EditText>(R.id.emailText)
         val num = v.findViewById<EditText>(R.id.numText)
         val user = v.findViewById<EditText>(R.id.userText)
-        val birth = v.findViewById<EditText>(R.id.bithText)
+        val birth = v.findViewById<TextView>(R.id.bithText)
         val update = v.findViewById<Button>(R.id.update)
 //        val profile = v.findViewById<ImageView>(R.id.profile)
 
@@ -86,6 +90,7 @@ class profile : Fragment() {
                     user.setText(it.getString("Username"))
                     birth.setText(it.getString("Birthdate"))
                     num.setText(it.getString("number"))
+
 //                url = it.getString("iurl").toString()
 //                if(url!="")
 //                {
@@ -101,7 +106,21 @@ class profile : Fragment() {
                 }
         }
 
+        birth.setOnClickListener{
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
 
+            // showing calender and setting bithdate
+
+            val date = activity?.let { it1 ->
+                DatePickerDialog(it1, DatePickerDialog.OnDateSetListener { view, year, month, day ->
+                    birth.text = "" + day + "/" + month + "/" + year
+                }, year, month, day)
+            }
+            date!!.show()
+        }
 
         update.setOnClickListener {
 
