@@ -129,7 +129,6 @@ class LoginActivity :AppCompatActivity(){
             val user = completedTask.getResult(ApiException::class.java)
             firebaseAuthWithGoogle(user.idToken)
 //            Toast.makeText(this,user.displayName,Toast.LENGTH_SHORT).show()
-
         }
 
         catch (e: ApiException) {

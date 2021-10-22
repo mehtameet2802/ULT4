@@ -13,8 +13,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.Call
@@ -131,6 +133,9 @@ class Latest_Movies : Fragment(R.layout.fragment_latest_movies) {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
+
+        val navbar = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navbar.visibility = View.VISIBLE
 
         setHasOptionsMenu(true)
 

@@ -61,7 +61,6 @@ class phoneLogin : AppCompatActivity() {
             ) {
                 mVerification = verificationId
                 forceResendingToken = token
-
             }
 
         }
@@ -90,7 +89,8 @@ class phoneLogin : AppCompatActivity() {
 
     private fun sendVerificationCode(number: String) {
 
-        val options = PhoneAuthOptions.newBuilder(mAuth)
+        val options = PhoneAuthOptions
+            .newBuilder(mAuth)
             .setPhoneNumber(number) // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(this) // Activity (for callback binding)
@@ -100,7 +100,8 @@ class phoneLogin : AppCompatActivity() {
     }
 
     private fun resendVerificationCode(number: String,token: PhoneAuthProvider.ForceResendingToken) {
-        val options = PhoneAuthOptions.newBuilder(mAuth)
+        val options = PhoneAuthOptions
+            .newBuilder(mAuth)
             .setPhoneNumber(number) // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(this) // Activity (for callback binding)

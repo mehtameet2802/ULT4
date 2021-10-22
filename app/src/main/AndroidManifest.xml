@@ -28,7 +28,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".phoneLogin"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-<!--        <activity android:name=".Adapter1$firestore_data"></activity>-->
     </application>
 
 </manifest>

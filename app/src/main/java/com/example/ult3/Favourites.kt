@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
@@ -44,6 +45,8 @@ class Favourites : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
+        val navbar = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navbar.visibility = View.VISIBLE
         setHasOptionsMenu(true)
         return v
     }
@@ -123,13 +126,6 @@ class Favourites : Fragment() {
                 rv.adapter?.notifyDataSetChanged()
                 return true
             }
-//            R.id.logout ->{
-//                mAuth.signOut()
-//                val intent = Intent(activity,LoginActivity::class.java)
-//                startActivity(intent)
-//                activity?.finish()
-//                return true
-//            }
             R.id.account ->{
                 val display = activity?.supportFragmentManager!!.beginTransaction()
                 display.replace(R.id.frame_layout, profile()).addToBackStack("profile").commit()

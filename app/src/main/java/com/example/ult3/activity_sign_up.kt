@@ -70,8 +70,7 @@ class activity_sign_up:AppCompatActivity() {
 
 
         save.setOnClickListener {
-            if (count == 1) {
-
+            if (count==1) {
                 uploadpic()
             } else {
                 Toast.makeText(this, "First change the image", Toast.LENGTH_SHORT).show()
@@ -86,8 +85,6 @@ class activity_sign_up:AppCompatActivity() {
 //                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 //            startActivityForResult(openGalleryIntent, 1000)
             startActivityForResult(intent, 1000)
-//
-            count = 1
         }
 
         sign_up.setOnClickListener {
@@ -150,6 +147,7 @@ class activity_sign_up:AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 imageUri = data?.data!!
                 profile.setImageURI(imageUri)
+                count = 1
             }
         }
     }

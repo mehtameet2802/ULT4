@@ -5,9 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -15,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -28,30 +27,32 @@ class profile : Fragment() {
     val mAuth = Firebase.auth
     val db = Firebase.firestore
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-
-//    override fun onStart() {
-//        super.onStart()
-//
-//    }
+    lateinit var update:Button
+    lateinit var email:EditText
+    lateinit var num:EditText
+    lateinit var user:EditText
+    var s:Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
-        // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_profile, container, false)
-        val email = v.findViewById<EditText>(R.id.emailText)
-        val num = v.findViewById<EditText>(R.id.numText)
-        val user = v.findViewById<EditText>(R.id.userText)
+        s=0;
+        setHasOptionsMenu(true)
+
+        val navbar = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navbar.visibility = View.GONE
+        email = v.findViewById<EditText>(R.id.emailText)
+        num = v.findViewById<EditText>(R.id.numText)
+        user = v.findViewById<EditText>(R.id.userText)
         val birth = v.findViewById<TextView>(R.id.bithText)
-        val update = v.findViewById<Button>(R.id.update)
-//        val profile = v.findViewById<ImageView>(R.id.profile)
+        update = v.findViewById<Button>(R.id.update)
+        val image = v.findViewById<ImageView>(R.id.profile)
 
+        update.visibility = View.GONE
 
-//        val p = mAuth.currentUser!!.phoneNumber
-//        num.setText(p)
+        disable1()
 
         if (mAuth.currentUser!!.email == "" || mAuth.currentUser!!.email == null) {
             val p = mAuth.currentUser!!.phoneNumber
@@ -63,15 +64,6 @@ class profile : Fragment() {
                         email.setText(it.getString("Email"))
                         user.setText(it.getString("Username"))
                         birth.setText(it.getString("Birthdate"))
-        //                url = it.getString("iurl").toString()
-        //                if(url!="")
-        //                {
-        //                    Glide.with(this)
-        //                        .l
-        //                        .using(FirebaseImageLoader())
-        //                        .load(storageReference)
-        //                        .into(imageView)
-        //                }
                     }
                     .addOnFailureListener {
                         email.setText("")
@@ -90,16 +82,15 @@ class profile : Fragment() {
                     user.setText(it.getString("Username"))
                     birth.setText(it.getString("Birthdate"))
                     num.setText(it.getString("number"))
-
-//                url = it.getString("iurl").toString()
-//                if(url!="")
-//                {
-//                    Glide.with(this)
-//                        .l
-//                        .using(FirebaseImageLoader())
-//                        .load(storageReference)
-//                        .into(imageView)
-//                }
+//                    image.setImageURI(mAuth.currentUser!!.photoUrl)
+//                url = mAuth.currentUser!!.photoUrl.toString()
+                if(mAuth.currentUser!!.photoUrl!=null)
+                {
+                    url = mAuth.currentUser!!.photoUrl.toString()
+                    Glide.with(this)
+                        .load(url)
+                        .into(image)
+                }
                 }
                 .addOnFailureListener {
 
@@ -107,44 +98,58 @@ class profile : Fragment() {
         }
 
         birth.setOnClickListener{
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
+            if(s==1) {
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
 
-            // showing calender and setting bithdate
+                // showing calender and setting bithdate
 
-            val date = activity?.let { it1 ->
-                DatePickerDialog(it1, DatePickerDialog.OnDateSetListener { view, year, month, day ->
-                    birth.text = "" + day + "/" + month + "/" + year
-                }, year, month, day)
+                val date = activity?.let { it1 ->
+                    DatePickerDialog(
+                        it1,
+                        DatePickerDialog.OnDateSetListener { view, year, month, day ->
+                            birth.text = "" + day + "/" + month + "/" + year
+                        },
+                        year,
+                        month,
+                        day
+                    )
+                }
+                date!!.show()
             }
-            date!!.show()
         }
 
         update.setOnClickListener {
-
-            if (email.toString() == "" && user.toString() == "" && birth.toString() == "" && num.toString() == "") {
-                Toast.makeText(
-                    activity,
-                    "Please enter email id, username, birthdate and number",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (email.toString() == "") {
-                Toast.makeText(activity, "Please enter username", Toast.LENGTH_SHORT).show()
-            } else if (user.toString() == "") {
-                Toast.makeText(activity, "Please enter username", Toast.LENGTH_SHORT).show()
-            } else if (birth.toString() == "") {
-                Toast.makeText(activity, "Please enter birthdate", Toast.LENGTH_SHORT).show()
-            } else if (num.toString() == "") {
-                Toast.makeText(activity, "Please enter number", Toast.LENGTH_SHORT).show()
-            } else {
-                firestore_data(email.text.toString(), user.text.toString(), birth.text.toString(),num.text.toString())
+            if (s == 1) {
+                if (email.toString() == "" && user.toString() == "" && birth.toString() == "" && num.toString() == "") {
+                    Toast.makeText(
+                        activity,
+                        "Please enter email id, username, birthdate and number",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (email.toString() == "") {
+                    Toast.makeText(activity, "Please enter username", Toast.LENGTH_SHORT).show()
+                } else if (user.toString() == "") {
+                    Toast.makeText(activity, "Please enter username", Toast.LENGTH_SHORT).show()
+                } else if (birth.toString() == "") {
+                    Toast.makeText(activity, "Please enter birthdate", Toast.LENGTH_SHORT).show()
+                } else if (num.toString() == "") {
+                    Toast.makeText(activity, "Please enter number", Toast.LENGTH_SHORT).show()
+                } else {
+                    firestore_data(
+                        email.text.toString(),
+                        user.text.toString(),
+                        birth.text.toString(),
+                        num.text.toString()
+                    )
 //                if (mAuth.currentUser!!.email == null || mAuth.currentUser!!.email == "") {
 //                    firestore_data2(email.text.toString(), user.text.toString(), birth.text.toString(),num.text.toString())
 //                } else {
 //                    firestore_data1(num.toString())
 //                }
+                }
             }
         }
 
@@ -174,6 +179,16 @@ class profile : Fragment() {
             dialog.show()
         }
         return v
+    }
+
+    private fun disable1() {
+        if(s==0)
+        {
+            email.isEnabled = false
+            num.isEnabled = false
+            user.isEnabled = false
+        }
+
     }
 
 
@@ -222,41 +237,28 @@ class profile : Fragment() {
         }
         }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.edit1, menu)
     }
 
-//    fun firestore_data1(num:String){
-//        val data = hashMapOf(
-//            "number" to num
-//        )
-//        mAuth.currentUser!!.email?.let {
-//            db.collection("users").document(it)
-//                .set(data)
-//                .addOnSuccessListener { Toast.makeText(activity, "Data updated successfully", Toast.LENGTH_SHORT).show() }
-//                .addOnFailureListener { Toast.makeText(activity,"Some error occurred while updating the data",Toast.LENGTH_SHORT).show()}
-//        }
-//    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.edit -> {
+                email.isEnabled = true
+                num.isEnabled = true
+                user.isEnabled = true
+                s=1;
+                update.visibility = View.VISIBLE
+                Toast.makeText(activity,"Now you can edit info",Toast.LENGTH_SHORT).show()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
-//    fun firestore_data2(
-//        email: String,
-//        username: String,
-//        birthdate: String,
-//        num:String
-//    ) {
-//        val user = hashMapOf(
-//            "Birthdate" to birthdate,
-//            "Email" to email,
-//            "Username" to username,
-//            "number" to num
-//        )
-//        mAuth.currentUser!!.phoneNumber?.let {
-//            db.collection("users").document(it)
-//                .set(user)
-//                .addOnSuccessListener {
-//    //                Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show()
-//                    Toast.makeText(activity, "Data updated successfully", Toast.LENGTH_SHORT).show()
-//                }
-//                .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error adding the user") }
-//        }
-//    }
+
+    }
+
 
 

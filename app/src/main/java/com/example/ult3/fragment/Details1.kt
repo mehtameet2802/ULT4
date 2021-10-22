@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.ult3.*
 import com.example.ult3.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
@@ -37,16 +38,6 @@ class Details1 : Fragment() {
     private val url: String = "https://api.themoviedb.org/3/movie/"
     private val b_video: String = "https://www.youtube.com/watch?v="
 
-//    override fun onConfigurationChanged(newConfig: Configuration) {
-//        super.onConfigurationChanged(newConfig)
-//        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-//            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-//        }
-//        else
-//        {
-//            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +48,10 @@ class Details1 : Fragment() {
         data1 = listOf()
 
         val v = inflater.inflate(R.layout.fragment_details, container, false)
+
+        val navbar = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navbar.visibility = View.GONE
+
         val name = arguments?.getString("mName").toString()
         val poster = arguments?.getString("mPoster").toString()
         val description = arguments?.getString("mDescription").toString()
@@ -134,19 +129,6 @@ class Details1 : Fragment() {
         }
 
 
-//        db.collection("users").document(email).collection("favourites")
-//            .whereEqualTo("name", name)
-//            .get()
-//            .addOnSuccessListener { documents ->
-//                for (document in documents) {
-//                    data.add(document.toObject(favDetails1::class.java))
-//                    f = 1
-//                    fav.setImageResource(R.drawable.favourite)
-////                    Toast.makeText(activity, "1", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-
-
         fav.setOnClickListener {
             if (f == 0) {
                 val favourite1 = hashMapOf(
@@ -197,22 +179,6 @@ class Details1 : Fragment() {
                             ).show()
                         }
                 }
-//                db.collection("users").document(email).collection("favourites").document(name)
-//                    .set(favourite1)
-//                    .addOnSuccessListener {
-//                        Toast.makeText(
-//                            context,
-//                            "Added to favourites",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                    .addOnFailureListener {
-//                        Toast.makeText(
-//                            context,
-//                            "Some problem",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
                 fav.setImageResource(R.drawable.favourite)
                 f = 1
             } else {
@@ -259,24 +225,8 @@ class Details1 : Fragment() {
                             ).show()
                         }
                 }
-
-//                db.collection("users").document(email).collection("favourites").document(name)
-//                    .delete()
-//                    .addOnSuccessListener {
-//                        Toast.makeText(
-//                            context,
-//                            "Removed from favourites",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                    .addOnFailureListener {
-//                        Toast.makeText(
-//                            context,
-//                            "Some problem",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-                    }
             }
+        }
 
 
         d_video.setOnClickListener() {
@@ -284,7 +234,7 @@ class Details1 : Fragment() {
                 Toast.makeText(activity, "Sorry the trailer is not available", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                val key = data1.get(0).key
+                val key = data1[0].key
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(b_video + key)
                 startActivity(intent)

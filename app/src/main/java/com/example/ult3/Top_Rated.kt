@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.Call
@@ -117,6 +118,8 @@ class Top_Rated : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_latest_movies, container, false)
+        val navbar = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navbar.visibility = View.VISIBLE
         setHasOptionsMenu(true)
         return v
     }
